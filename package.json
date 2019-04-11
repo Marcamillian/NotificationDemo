@@ -16,5 +16,9 @@
   "bugs": {
     "url": "https://github.com/Marcamillian/NotificationDemo/issues"
   },
-  "homepage": "https://github.com/Marcamillian/NotificationDemo#readme"
+  "homepage": "https://github.com/Marcamillian/NotificationDemo#readme",
+  "dependencies": {
+    "express": "^4.16.4",
+    "http": "0.0.0"
+  }
 }
