@@ -5,7 +5,15 @@ A demo to let me expore the notification API with a view to using it for web pus
 
 ## How to run
 - Clone the [repository](https://github.com/Marcamillian/NotificationDemo)
-- Serve the files from the directory (I like to use [live-server](https://www.npmjs.com/package/live-server)) 
+- run ````npm install```` in the project directory
+- run ````npm start```` to start the server on port :8080
+
+
+## Roadmap
+- Add database for development and production (redis or postgres on heroku)
+- Save subscriptions to databases
+- pull data from database and push notification
+- cron jobs on heroku? (https://devcenter.heroku.com/articles/scheduler#dyno-hour-costs)
 
 
 ## Resources

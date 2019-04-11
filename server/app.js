@@ -6,7 +6,7 @@ const express = require('express');
 const http = require('http');
 
 let app = express();
-const serveDir = './notify-push';
+const serveDir = './public';
 let server;
 
 app.set('port', (process.env.PORT || 8080));
