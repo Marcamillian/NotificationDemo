@@ -5,13 +5,45 @@ console.log("Something Server-y")
 const express = require('express');
 const http = require('http');
 
-
 let app = express();
 const serveDir = './notify-push';
 let server;
 
 app.set('port', (process.env.PORT || 8080));
 app.use(express.static(serveDir));
+
+app.post('/api/save-subscription/', function(req, res){
+
+  // temp reply to the put request
+  console.log("Someone tried to save a subscription");
+  res.setHeader('Content-Type', 'application/json');
+  res.send(JSON.stringify({ data: { success: true } }))
+
+  /* !TODO - write the is valid check
+  if(!isValidSaveRequest(req, res)){
+    return;
+  }
+  */
+
+  /*  !TODO - fill in database helper before we can use this
+  return saveSubscriptionToDatabase(req.body) // TODO: Set up this database call
+  .then( (subscriptionId)=>{
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ data: { success: true } }))
+  })
+  .catch( err =>{
+    res.status(500);
+    res.setHeader('Content-Type', 'applcation/json');
+    res.send( JSON.stringify({
+      error:{
+        id: 'unable-to-save-subscription',
+        message: 'The subscription was recieved but we were unable to save it to our database'
+      }
+    }))
+  })
+  */
+
+})
 
 server = http.createServer(app);
 
