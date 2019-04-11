@@ -1,5 +1,8 @@
 console.log("Hello World")
 
+let pushSub;
+const serverSubSaveUrl = '/api/save-subscription';
+
 // check if browser supports things
 if(!('serviceWorker' in navigator)){
   alert("Service worker isn't supported")
@@ -46,9 +49,53 @@ function askPermission(){
 }
 
 
+function subscribeUserToPush(){
+  return navigator.serviceWorker.register('./service-worker.js')
+  .then(function(registration){
+    const subscribeOptions ={
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(
+        'BKMIRIHflfYtIPAbrtTusnePvYEHpGx8fyXpo8YNEfXi6sFegJlz_af3sqJ55i9JdT5F20J0Xv6Sd5ee79T9oqA'
+      )
+    };
 
-let registration = registerServiceWorker();
-askPermission().then(console.log)
+    return registration.pushManager.subscribe(subscribeOptions)
+  })
+  .then(function(pushSubscription){
+    console.log('Recieved PushSubscription:', JSON.stringify(pushSubscription))
+    return pushSubscription;
+  })
+}
+
+function sendSubscriptionToBackEnd(subscription){
+  return fetch(serverSubSaveUrl,{
+    method: 'POST',
+    headers:{
+      'Content-Type':'application/json'
+    },
+    body: JSON.stringify(subscription)
+  })
+  .then(function(response){
+    if(!response.ok){
+      throw new Error('Bad status code from server')
+    }
+
+    return response.json();
+  })
+  .then(function(responseData){
+    if(!(responseData.data && response.data.success)){
+      throw new Error('Bad response from server')
+    }
+  });
+}
+
+
+//let registration = registerServiceWorker();
+
+askPermission()
+.then(
+  pushSub = subscribeUserToPush()
+)
 
 
 

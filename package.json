@@ -1,0 +1,20 @@
+{
+  "name": "notificationdemo",
+  "version": "0.0.1",
+  "description": "Test Project to use web push notifications",
+  "main": "server/app.js",
+  "scripts": {
+    "start": "node server/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Marcamillian/NotificationDemo.git"
+  },
+  "author": "Marc Vousden",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Marcamillian/NotificationDemo/issues"
+  },
+  "homepage": "https://github.com/Marcamillian/NotificationDemo#readme"
+}
