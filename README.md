@@ -11,6 +11,7 @@ A demo to let me expore the notification API with a view to using it for web pus
 
 ## Roadmap
 - Add database for development and production (redis or postgres on heroku)
+  - connect postgress in heroku - https://devcenter.heroku.com/articles/heroku-postgresql#connecting-in-node-js
 - Save subscriptions to databases
 - pull data from database and push notification
 - cron jobs on heroku? (https://devcenter.heroku.com/articles/scheduler#dyno-hour-costs)

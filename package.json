@@ -19,6 +19,7 @@
   "homepage": "https://github.com/Marcamillian/NotificationDemo#readme",
   "dependencies": {
     "express": "^4.16.4",
-    "http": "0.0.0"
+    "http": "0.0.0",
+    "pg-promise": "^8.6.4"
   }
 }
