@@ -2,11 +2,14 @@
 
 const express = require('express');
 const http = require('http');
-const DBHelper = require(DBHelper);
+const { DbHelper } = require('./DbHelper');
+
+const serveDir = './public';
+const dbConfig = "postgres://postgres:passopen@localhost:5432/postgres";
 
 let app = express();
-const serveDir = './public';
 let server;
+let dbHelper = new DbHelper(dbConfig);
 
 app.set('port', (process.env.PORT || 8080));
 app.use(express.static(serveDir));

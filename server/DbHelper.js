@@ -1,20 +1,22 @@
 const pgp = require('pg-promise')();
 
-class DBHelper {
+class DbHelper {
   
-  constructor(){
+  constructor( connectionConfig ){
 
-    this.db = new pgp({
-      host:"localhost",
-      port: 5432,
-      database: "notification-demo",
-      user: "postgres",
-      password: "passopen"
-    })
+    this.db = pgp( connectionConfig )
     
     this.db.connect()
+    .then(()=>{
+      console.log("connected to database")
+    })
+    .catch( error =>{
+      console.error("Coudln't connect to database")
+      console.error(error)
+    })
+      
   }
 
 }
 
-module.exports = DbHelper;
+module.exports = { DbHelper }
