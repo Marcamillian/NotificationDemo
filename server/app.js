@@ -3,6 +3,7 @@
 const express = require('express');
 const http = require('http');
 const { DbHelper } = require('./DbHelper');
+const bodyParser = require("body-parser");
 
 const serveDir = './public';
 const dbConfig = "postgres://postgres:passopen@localhost:5433/notificationdemo";
@@ -12,6 +13,8 @@ let server;
 let dbHelper = new DbHelper(dbConfig);
 
 app.set('port', (process.env.PORT || 8080));
+app.use( bodyParser.urlencoded({ extended: false }));
+app.use( bodyParser.json() )
 app.use(express.static(serveDir));
 
 app.post('/api/save-subscription/', function(req, res){
@@ -27,7 +30,7 @@ app.post('/api/save-subscription/', function(req, res){
     res.setHeader('Content-Type', 'application/json');
     res.send( JSON.stringify({ data: { success: false } }) )
   })
-
+  
   /* !TODO - write the is valid check
   if(!isValidSaveRequest(req, res)){
     return;
