@@ -5,7 +5,7 @@ const http = require('http');
 const { DbHelper } = require('./DbHelper');
 
 const serveDir = './public';
-const dbConfig = "postgres://postgres:passopen@localhost:5432/postgres";
+const dbConfig = "postgres://postgres:passopen@localhost:5433/notificationdemo";
 
 let app = express();
 let server;
@@ -16,10 +16,17 @@ app.use(express.static(serveDir));
 
 app.post('/api/save-subscription/', function(req, res){
 
-  // temp reply to the put request
-  console.log("Someone tried to save a subscription");
-  res.setHeader('Content-Type', 'application/json');
-  res.send(JSON.stringify({ data: { success: true } }))
+  dbHelper.saveSubscription(req.body)
+  .then( ()=>{
+    res.setHeader('Content-Type', 'application/json');
+    res.send( JSON.stringify({ data: { success: true } }) )
+  })
+  .catch( error =>{
+
+    console.error( error );
+    res.setHeader('Content-Type', 'application/json');
+    res.send( JSON.stringify({ data: { success: false } }) )
+  })
 
   /* !TODO - write the is valid check
   if(!isValidSaveRequest(req, res)){

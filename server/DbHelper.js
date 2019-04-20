@@ -17,6 +17,10 @@ class DbHelper {
       
   }
 
+  saveSubscription(subscriptionJSON){
+    return this.db.none('INSERT INTO subscriptions(sub_object) VALUES( $1 )', JSON.stringify(subscriptionJSON) )
+  }
+
 }
 
 module.exports = { DbHelper }
