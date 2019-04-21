@@ -1,0 +1,42 @@
+<style>
+  .toggle-button{
+    width: 100px;
+    height: 50px;
+  }
+  
+  input[type=checkbox]{
+
+  }
+
+  input[type="checkbox"]:checked+label .slide-nub{
+    left:50%;
+  }
+
+  .slide-container, .slide-nub{
+    border-radius: 50px;
+  }
+
+  .slide-container{
+    display:block;
+    background-color: grey;
+    border:2px solid lightblue;
+  }
+
+  .slide-nub{
+    position: relative;
+    background-color: goldenrod;
+    height:100%;
+    width:50%;
+    left:0%;
+
+    transition: left 1s ease;
+  }
+
+</style>
+
+<div class="toggle-button">
+  <input type="checkbox">
+  <label class="slide-container">
+      <div class="slide-nub"></div>
+  </label>
+</div>

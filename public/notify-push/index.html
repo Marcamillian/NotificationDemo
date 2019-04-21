@@ -4,9 +4,19 @@
   <meta charset="utf8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <style>
+  </style>
+
+  <script type="module">
+    import ToggleButton from './../components/toggle-button.js';
+
+    customElements.define('toggle-button', ToggleButton)
+  </script>
+
   <script src="./script.js"></script>
 </head>
 
 <body>
   <h1> Google Push notification </h1>
+  <toggle-button></toggle-button>
 </body>

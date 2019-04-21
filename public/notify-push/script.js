@@ -106,12 +106,13 @@ function urlBase64ToUint8Array(base64String) {
 
 //let registration = registerServiceWorker();
 
+/*
 askPermission()
 .then( ()=>{
   return subscribeUserToPush()
 })
 .then( sendSubscriptionToBackEnd )
-
+*/
 
 
 
