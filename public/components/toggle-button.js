@@ -12,6 +12,7 @@ template.innerHTML=`
 
   input[type="checkbox"]:checked+label .slide-nub{
     left:50%;
+    background-color:goldenrod;
   }
 
   .slide-container, .slide-nub{
@@ -28,12 +29,12 @@ template.innerHTML=`
 
   .slide-nub{
     position: relative;
-    background-color: goldenrod;
+    background-color: #a9a9a9;
     height:100%;
     width:50%;
     left:0%;
 
-    transition: left 1s ease;
+    transition: left 1s ease, background-color 1s ease-out;
   }
 </style>
 
@@ -47,8 +48,10 @@ template.innerHTML=`
 export default class ToggleButton extends HTMLElement{
   constructor(){
     super();
-
-    this.addEventListener('click', this.clickHandler.bind(this))
+    
+    this.tabIndex = 1;
+    this.addEventListener('click',  this.clickHandler.bind(this))
+    this.addEventListener('keydown', this.keyboardHandler.bind(this))
   }
 
   /*
@@ -62,15 +65,30 @@ export default class ToggleButton extends HTMLElement{
 
     let instance = template.content.cloneNode(true);
     this.shadowRoot.appendChild(instance)
+
+  }
+
+  toggleButton(){
+    let checkbox = this.shadowRoot.querySelector('input[type="checkbox"]')
+    checkbox.checked = !checkbox.checked
   }
 
   clickHandler(event){
     event.preventDefault()
-    console.log("Button has been clicked")
-    let checkbox = this.shadowRoot.querySelector('input[type="checkbox"]')
+    this.toggleButton()
+  }
 
-    // toggle checked
-    checkbox.checked = !checkbox.checked
+  keyboardHandler(event){
+    
+    switch(event.keyCode){
+      case 13:
+        event.preventDefault();
+        this.toggleButton()
+      break;
+      default:
+        console.log(event.keyCode)
+      break;
+    }
   }
 
 }

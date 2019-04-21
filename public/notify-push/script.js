@@ -103,15 +103,18 @@ function urlBase64ToUint8Array(base64String) {
   return outputArray;
 }
 
+function setNotifications(){
+  return askPermission()
+  .then( ()=>{
+    return subscribeUserToPush()
+  })
+  .then( sendSubscriptionToBackEnd )
+}
 
 //let registration = registerServiceWorker();
 
 /*
-askPermission()
-.then( ()=>{
-  return subscribeUserToPush()
-})
-.then( sendSubscriptionToBackEnd )
+
 */
 
 
