@@ -78,6 +78,14 @@ export default class ToggleButton extends HTMLElement{
     this.toggleButton()
   }
 
+  getState(){
+    return this.shadowRoot.querySelector('input[type="checkbox"]').checked
+  }
+
+  setState(isChecked){
+    this.shadowRoot.querySelector('input[type="checkbox"]').checked = isChecked;
+  }
+
   keyboardHandler(event){
     
     switch(event.keyCode){

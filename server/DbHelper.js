@@ -18,7 +18,27 @@ class DbHelper {
   }
 
   saveSubscription(subscriptionJSON){
-    return this.db.none('INSERT INTO subscriptions(sub_object) VALUES( $1 )', JSON.stringify(subscriptionJSON) )
+    return this.db.one(`
+      INSERT INTO subscriptions(sub_object)
+      VALUES( $1 )
+      RETURNING sub_id
+      `, JSON.stringify(subscriptionJSON) )
+  }
+
+  hasSubscription(subId){
+    return this.db.one(`
+      SELECT COUNT(1)
+      FROM subscriptions
+      WHERE sub_id = ${subId}
+    `)
+  }
+
+  deleteSubscription(subId){
+    return this.db.none(`
+      DELETE
+      FROM subscriptions
+      WHERE sub_id = ${subId}
+    `)
   }
 
 }

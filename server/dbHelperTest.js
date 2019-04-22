@@ -5,18 +5,10 @@ connectionConfig = "postgres://postgres:passopen@localhost:5433/notificationdemo
 let dbHelper = new DbHelper(connectionConfig);
 
 
-let dummySubscription = {
-  endpoint:"https://fcm.googleapis.com/fcm/send/something",
-  expirationTime:null,
-  keys:{
-    p256dh:"somekey",
-    auth:"someOtherKey"
-  }
-}
 
-
-dbHelper.saveSubscription( dummySubscription )
-.then(()=>{
-  console.log("Put soemthing in the database")
+dbHelper.deleteSubscription( 45 )
+.then((responseThing)=>{
+  console.log(responseThing)
+  console.log("Delete something from the database")
 })
 .catch(console.error)

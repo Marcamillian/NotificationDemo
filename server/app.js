@@ -17,12 +17,32 @@ app.use( bodyParser.urlencoded({ extended: false }));
 app.use( bodyParser.json() )
 app.use(express.static(serveDir));
 
-app.post('/api/save-subscription/', function(req, res){
+app.get('/api/subscription/:id', function(req,res){
+  let subId = req.params.id;
+
+  dbHelper.hasSubscription(subId)
+  .then( dbResult =>{
+    if( dbResult.count == 1 ){
+      res.setHeader('Content-Type', 'application/json');
+      res.send( JSON.stringify({ data: { success: true } }) )
+    }else{
+      throw new Error(`Couldn't find subscription ${subId}`)
+    }
+  })
+  .catch( error =>{
+    console.error( "id not present" );
+    res.setHeader('Content-Type', 'application/json');
+    res.send( JSON.stringify({ data: { success: false } }) )
+  })
+})
+
+app.post('/api/subscription/', function(req, res){
 
   dbHelper.saveSubscription(req.body)
-  .then( ()=>{
+  .then( ({ sub_id })=>{
+    
     res.setHeader('Content-Type', 'application/json');
-    res.send( JSON.stringify({ data: { success: true } }) )
+    res.send( JSON.stringify({ data: { success: true, id: sub_id } }) )
   })
   .catch( error =>{
 
@@ -55,6 +75,22 @@ app.post('/api/save-subscription/', function(req, res){
   })
   */
 
+})
+
+app.delete('/api/subscription/:id', function(req, res){
+  let subId = req.params.id;
+
+  //!TODO delete subscription from database
+  dbHelper.deleteSubscription(subId)
+  .then( dbResult =>{
+    res.setHeader('Content-Type', 'application/json');
+    res.send( JSON.stringify({ data:{ success: true } }))
+  })
+  .catch( error =>{
+    console.error(`id not present: ${subId}`)
+    res.setHeader('Content-Type', 'application/json');
+    res.send( JSON.stringify({ data: {success: false } }))
+  })
 })
 
 server = http.createServer(app);

@@ -1,5 +1,6 @@
 let pushSub;
-const serverSubSaveUrl = '/api/save-subscription/';
+const serverSubUrl = '/api/subscription/';
+
 
 // check if browser supports things
 if(!('serviceWorker' in navigator)){
@@ -21,7 +22,6 @@ function registerServiceWorker(){
   })
 }
 
-// Notification.requestPermission was changed to return a promise (rather than take a callback) - this handles both implementations
 function askPermission(){
 
   // return our own promise
@@ -65,28 +65,89 @@ function subscribeUserToPush(){
   })
 }
 
+// server requests
+function checkSignalId(){
+  const signalId = getCookieObject().signal_id || "none"
+  if(signalId != undefined){
+    // check that server knows we are subscribed
+    return fetch(`${serverSubUrl}${signalId}`)
+    .then( handleFetchResponse )
+    .then( (responseJSON)=>{
+      if( !(responseJSON.data && responseJSON.data.success)){
+        console.log("subscription not found on server")
+        return false
+      }else{
+        console.log("is subscribed")
+        return true
+      }
+    })
+  }
+}
+
 function sendSubscriptionToBackEnd(subscription){
-  return fetch(serverSubSaveUrl,{
+  return fetch(serverSubUrl,{
     method: 'POST',
     headers:{
       'Content-Type':'application/json'
     },
     body: JSON.stringify(subscription)
   })
-  .then(function(response){
-    if(!response.ok){
-      throw new Error('Bad status code from server')
-    }
-
-    return response.json();
-  })
+  .then( handleFetchResponse )
   .then(function(response){
     if(!(response.data && response.data.success)){
-      throw new Error('Bad response from server')
+      throw new Error("Couldn't save subscription")
     }else{
-      console.log("Request successful")
+      return response.data
     }
   });
+}
+
+function removeSubscription(subId){
+  const signalId = getCookieObject().signal_id || "none";
+  return fetch(`${serverSubUrl}${signalId}`,{
+    method: 'DELETE'
+  })
+  .then(handleFetchResponse)
+  .then(function(response){
+    if(!(response.data && response.data.success)){
+      throw new Error("Couldn't delete subscription")
+    }else{
+      console.log("unsubscribed")
+      removeSignalId()
+    }
+  })
+}
+
+// utility functions
+function handleFetchResponse(response){
+  if(!response.ok){
+    console.error('Bad status code from server', response.Error)
+  }
+  return response.json();
+}
+
+
+function setSignalId({ id }){
+  document.cookie = `signal_id=${ id }`
+}
+
+function removeSignalId(){
+  document.cookie=`signal_id=; Max-Age=-9999999`
+}
+
+function getCookieObject(){
+
+  let cookieObject = {}
+  document.cookie.split(";")
+  .forEach( cookie =>{
+    
+    let pair = cookie.split("=")
+    
+    cookieObject[pair[0]] = pair[1]
+    
+  })
+
+  return cookieObject
 }
 
 
@@ -103,19 +164,36 @@ function urlBase64ToUint8Array(base64String) {
   return outputArray;
 }
 
+
+// == implemention
+
 function setNotifications(){
   return askPermission()
   .then( ()=>{
     return subscribeUserToPush()
   })
   .then( sendSubscriptionToBackEnd )
+  .then( setSignalId )
 }
 
+function toggleNotification(){
+  let toggleButton = document.querySelector('toggle-button')
+  if( toggleButton.getState() == false){
+    setNotifications()
+  }else{
+    removeSubscription()
+  }
+}
+
+// set the inital state of the button
+checkSignalId()
+.then( success =>{
+  if (success){
+    document.querySelector('toggle-button').setState(success)
+  }
+})
+
 //let registration = registerServiceWorker();
-
-/*
-
-*/
 
 
 
