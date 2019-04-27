@@ -4,10 +4,30 @@ const express = require('express');
 const http = require('http');
 const { DbHelper } = require('./DbHelper');
 const bodyParser = require("body-parser");
+const webpush = require('web-push');
 
 const serveDir = './public';
 const dbConfig = "postgres://postgres:passopen@localhost:5433/notificationdemo";
+const vapidKeys = {
+  publicKey: 'BKMIRIHflfYtIPAbrtTusnePvYEHpGx8fyXpo8YNEfXi6sFegJlz_af3sqJ55i9JdT5F20J0Xv6Sd5ee79T9oqA',
+  privateKey: process.env.WEB_PUSH_PRIVATE_KEY
+}
 
+webpush.setVapidDetails('mailto:marcamillian@gmail.com', vapidKeys.publicKey, vapidKeys.privateKey)
+
+const triggerPushMsg = function(subscription, dataToSend){
+  return webpush.sendNotification(subscription.sub_object, dataToSend)
+  .catch( err =>{
+    if(err.statisCode === 410){
+      return dbHelper.deleteSubscription(subscription.sub_id)
+    }else{
+      console.log('Subscription no longer valid:', err)
+    }
+  })
+}
+
+
+// Server set up
 let app = express();
 let server;
 let dbHelper = new DbHelper(dbConfig);
@@ -17,6 +37,7 @@ app.use( bodyParser.urlencoded({ extended: false }));
 app.use( bodyParser.json() )
 app.use(express.static(serveDir));
 
+// server REST endpoints
 app.get('/api/subscription/:id', function(req,res){
   let subId = req.params.id;
 
@@ -93,6 +114,36 @@ app.delete('/api/subscription/:id', function(req, res){
   })
 })
 
+app.put('/api/push-message', function(req, res){
+  
+  dbHelper.getAllSubscriptions()
+  .then( subscriptionArray =>{
+    let promiseChain = Promise.resolve();
+
+    subscriptionArray.forEach(( subscription )=>{
+      promiseChain = promiseChain.then(()=>{
+        return triggerPushMsg(subscription, "something")
+      })
+    })
+  })
+  .then( ()=>{
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ data: { success:true }}))
+  })
+  .catch( err =>{
+    res.status(500)
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({
+      error:{
+        id:'unable-to-send-messages',
+        message: 'We were unable to send messages to all subscriptions'
+      }
+    }))
+  })
+})
+
+
+// init server
 server = http.createServer(app);
 
 server.listen(app.get('port'), ()=>{ console.log(`listening on port ${app.get('port')}`)})

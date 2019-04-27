@@ -41,6 +41,13 @@ class DbHelper {
     `)
   }
 
+  getAllSubscriptions(){
+    return this.db.many(`
+      SELECT *
+      FROM subscriptions
+    `)
+  }
+
 }
 
 module.exports = { DbHelper }
