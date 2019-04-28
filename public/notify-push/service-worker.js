@@ -1,24 +1,54 @@
 'use strict'
+let actionUrls = {};
+
+
+self.addEventListener('install', (event)=>{
+  console.log("Service worker install")
+})
+
+self.addEventListener('activate', (event)=>{
+  console.log("Service worker activated")
+})
 
 self.addEventListener('push', function(event){
-  console.log('recieved a push message', event)
+  
+  let payload = event.data ? JSON.parse(event.data.text()) : 'no data on push';
+  let {title, body, tag, actions, defaultLink} = payload;
 
-  var title = "Yay a message";
-  var body = "We have recieved a push message";
-  var tag = `simple-push-demo-notification-tag`;
+  actionUrls['default'] = defaultLink || '/notify-push/'
+
+  actions.forEach( action =>{
+    if(action.url){
+      actionUrls[action.action] = action.url
+    }
+  })
 
   event.waitUntil(
     self.registration.showNotification(title,{
-      body: body,
-      tag: tag
+      body,
+      tag,
+      actions
     })
   )
 })
 
-self.addEventListener('notificationClick', function(event){
-  console.log('On notification click', event.notification.tag);
-  event.notification.close()
+self.addEventListener('notificationclick', function(event){
 
+  switch( event.action ){
+    case 'link':
+      event.notification.close()
+      clients.openWindow( actionUrls[ event.action ] )
+    break;
+    case 'dismiss':
+      event.notification.close()
+    break;
+    default: // if actions aren't supported
+      clients.openWindow(actionUrls['default'])
+      
+    break;
+  }
+
+  /*
   event.waitUntil(clients.matchAll({
     type: 'window'
   }).then( clientList =>{
@@ -32,6 +62,7 @@ self.addEventListener('notificationClick', function(event){
       return clients.openWindow('/')
     }
   }))
+  */
 
 })
 

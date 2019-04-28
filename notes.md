@@ -1,3 +1,9 @@
+TODO:
+- [x] Get click buttons into notifications
+- [ ] Get hosted on AWS/heroku/google cloud
+
+# Notes about Postgres
+
 Working with pgadmin4
 
 Found this tutorial that might help - https://linuxhint.com/pgadmin4_tutorial_beginners/
@@ -13,7 +19,12 @@ connecting through psql console (installed on machine)
 
 
 through pgAdmin4 -
-
 Able to add items to database using the query
 - INSERT INTO subscriptions(sub_object) VALUES ('{"test":"thing"}')
 
+# Notes about hosting
+
+- Worth trying AWS?
+  - research to see how easy is is to get databases on AWS
+  - this tutorial - https://aws.amazon.com/getting-started/tutorials/create-connect-postgresql-db/
+- Using postgre sql because thats what heroku has?

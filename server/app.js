@@ -122,7 +122,17 @@ app.put('/api/push-message', function(req, res){
 
     subscriptionArray.forEach(( subscription )=>{
       promiseChain = promiseChain.then(()=>{
-        return triggerPushMsg(subscription, "something")
+        let payloadString = JSON.stringify({
+          title: "Server notification title",
+          body: "Server notification body",
+          tag: "server-demo-notification",
+          actions: [
+            { action: 'link', title: 'Help Gotham', url:'http://www.bbc.co.uk'},
+            { action: 'dismiss', title: "Not Now"}
+          ]
+        })
+
+        return triggerPushMsg(subscription, payloadString)
       })
     })
   })
