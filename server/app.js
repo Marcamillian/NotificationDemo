@@ -7,7 +7,7 @@ const bodyParser = require("body-parser");
 const webpush = require('web-push');
 
 const serveDir = './public';
-const dbConfig = "postgres://postgres:passopen@localhost:5433/notificationdemo";
+const dbConfig = process.env.WEB_PUSH_DB_STRING;
 const vapidKeys = {
   publicKey: 'BKMIRIHflfYtIPAbrtTusnePvYEHpGx8fyXpo8YNEfXi6sFegJlz_af3sqJ55i9JdT5F20J0Xv6Sd5ee79T9oqA',
   privateKey: process.env.WEB_PUSH_PRIVATE_KEY
