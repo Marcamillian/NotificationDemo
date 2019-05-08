@@ -2,6 +2,17 @@ TODO:
 - [x] Get click buttons into notifications
 - [ ] Get hosted on AWS/heroku/google cloud
 
+
+# TODO:
+
+## Hosted on AWS
+- connected to AWS database through pgAdmin4
+- updated app.js to pull connection string from environment variable
+- can run app on AWS - but don't get connection messsage
+  - !TODO: Ensure that the connection string is right on local machine before trying on AWS
+- !TODO: Add in production environment port to allow to connect to AWS 
+
+
 # Notes about Postgres
 
 Working with pgadmin4
