@@ -9,7 +9,8 @@ TODO:
 - connected to AWS database through pgAdmin4
 - updated app.js to pull connection string from environment variable
 - can run app on AWS - but don't get connection messsage
-  - !TODO: Ensure that the connection string is right on local machine before trying on AWS
+  - [x] TODO: Ensure that the connection string is right on local machine before trying on AWS
+    - username was wrong in connection string 
 - !TODO: Add in production environment port to allow to connect to AWS 
 
 
